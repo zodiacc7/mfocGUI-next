@@ -5,8 +5,21 @@
 #include <cstdint>
 
 
+struct BlockInfo
+{
+    int sector;
+    int block;
+    bool trailer;
+};
+
+
 class MifareClassic
 {
+
+private:
+
+    std::vector<std::vector<uint8_t>> blocks;
+
 
 public:
 
@@ -19,6 +32,11 @@ public:
 
 
     std::vector<uint8_t> getBlock(
+        int block
+    );
+
+
+    BlockInfo getBlockInfo(
         int block
     );
 
