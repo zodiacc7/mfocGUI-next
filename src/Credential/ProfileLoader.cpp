@@ -1,9 +1,13 @@
 #include "ProfileLoader.h"
+#include "JsonParser.h"
 
 
 bool ProfileLoader::load(std::string filename)
 {
-    // JSON parser will be added next
 
-    return true;
+    fields =
+        JsonParser::loadFields(filename);
+
+
+    return !fields.empty();
 }
