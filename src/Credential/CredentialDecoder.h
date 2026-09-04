@@ -18,4 +18,10 @@ public:
     );
 
 
+    bool encode(
+        MifareClassic& card,
+        CredentialField field,
+        std::vector<uint8_t> value
+    );
+
 };
