@@ -22,7 +22,7 @@ bool MifareClassic::loadDump(
     blocks.clear();
 
 
-    for(int i = 0; i < 64; i++)
+    while(file)
     {
 
         std::vector<uint8_t> block(
@@ -38,8 +38,8 @@ bool MifareClassic::loadDump(
         );
 
 
-        if(!file)
-            return false;
+        if(file.gcount() != BLOCK_SIZE)
+            break;
 
 
         blocks.push_back(block);
@@ -47,7 +47,7 @@ bool MifareClassic::loadDump(
     }
 
 
-    return true;
+    return !blocks.empty();
 
 }
 
