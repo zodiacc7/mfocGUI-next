@@ -34,4 +34,11 @@ public:
         int index
     );
 
+
+    bool updateField(
+        MifareClassic& card,
+        int index,
+        std::string value
+    );
+
 };
