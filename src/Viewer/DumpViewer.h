@@ -2,9 +2,11 @@
 
 #include "../Dump/MifareClassic.h"
 #include "../Credential/ProfileLoader.h"
+#include "../Credential/CredentialDecoder.h"
 
 #include <vector>
 #include <cstdint>
+
 
 
 class DumpViewer
@@ -18,6 +20,12 @@ public:
 
 
     void showCredentials(
+        MifareClassic& card,
+        ProfileLoader& profile
+    );
+
+
+    void showCredit(
         MifareClassic& card,
         ProfileLoader& profile
     );
