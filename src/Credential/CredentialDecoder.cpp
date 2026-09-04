@@ -19,39 +19,76 @@ CredentialDecoder::decode(
 
 
     if(block.empty())
-    {
         return result;
-    }
-
-
-    int start =
-        field.offset;
 
 
     int end =
-        start + field.size;
+        field.offset + field.size;
 
 
     if(end > block.size())
-    {
         return result;
-    }
 
 
     for(
-        int i = start;
+        int i = field.offset;
         i < end;
         i++
     )
     {
-
         result.push_back(
             block[i]
         );
-
     }
 
 
     return result;
+
+}
+
+
+
+bool CredentialDecoder::encode(
+    MifareClassic& card,
+    CredentialField field,
+    std::vector<uint8_t> value
+)
+{
+
+    if(
+        value.size() != field.size
+    )
+    {
+        return false;
+    }
+
+
+    auto block =
+        card.getBlock(
+            field.block
+        );
+
+
+    if(block.empty())
+        return false;
+
+
+    for(
+        int i = 0;
+        i < field.size;
+        i++
+    )
+    {
+
+        block[field.offset+i] =
+            value[i];
+
+    }
+
+
+    return card.writeBlock(
+        field.block,
+        block
+    );
 
 }
