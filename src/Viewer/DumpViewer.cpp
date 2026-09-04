@@ -26,13 +26,15 @@ void DumpViewer::showCard(
 
         if(info.trailer)
         {
+
             std::cout
                 << " [SECTOR TRAILER]";
+
         }
 
 
         std::cout
-            << ": ";
+            << std::endl;
 
 
         auto data =
@@ -40,6 +42,43 @@ void DumpViewer::showCard(
 
 
         printHex(data);
+
+
+        if(info.trailer)
+        {
+
+            auto trailer =
+                card.getSectorTrailer(block);
+
+
+            std::cout
+                << " Key A: ";
+
+            printHex(
+                trailer.keyA
+            );
+
+
+            std::cout
+                << " Access Bits: ";
+
+            printHex(
+                trailer.accessBits
+            );
+
+
+            std::cout
+                << " Key B: ";
+
+            printHex(
+                trailer.keyB
+            );
+
+        }
+
+
+        std::cout
+            << std::endl;
 
     }
 
