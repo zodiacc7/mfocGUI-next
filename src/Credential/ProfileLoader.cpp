@@ -54,3 +54,44 @@ ProfileLoader::decodeField(
     );
 
 }
+
+
+
+bool ProfileLoader::updateField(
+    MifareClassic& card,
+    int index,
+    std::string value
+)
+{
+
+    if(
+        index < 0 ||
+        index >= fields.size()
+    )
+    {
+        return false;
+    }
+
+
+    CredentialField field =
+        fields[index];
+
+
+    CredentialDecoder decoder;
+
+
+    auto data =
+        decoder.encodeValue(
+            value,
+            field.type,
+            field.size
+        );
+
+
+    return decoder.encode(
+        card,
+        field,
+        data
+    );
+
+}
