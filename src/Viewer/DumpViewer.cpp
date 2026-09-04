@@ -2,10 +2,10 @@
 #include <iostream>
 
 
-void DumpViewer::showStructure(int sectors)
+void DumpViewer::showDump(DumpParser& dump)
 {
 
-    for(int s = 0; s < sectors; s++)
+    for(int s = 0; s < dump.getSectorCount(); s++)
     {
 
         std::cout
@@ -14,25 +14,16 @@ void DumpViewer::showStructure(int sectors)
             << std::endl;
 
 
-        for(int b = 0; b < 4; b++)
+        auto blocks =
+            dump.getBlocks(s);
+
+
+        for(auto& block : blocks)
         {
-
-            if(b == 3)
-            {
-                std::cout
-                    << " Block "
-                    << b
-                    << " (Trailer)"
-                    << std::endl;
-            }
-            else
-            {
-                std::cout
-                    << " Block "
-                    << b
-                    << std::endl;
-            }
-
+            std::cout
+                << " Block "
+                << block.index
+                << std::endl;
         }
 
     }
