@@ -1,43 +1,57 @@
 #include "CredentialDecoder.h"
-#include <sstream>
-#include <iomanip>
-
-
-void CredentialDecoder::addField(CredentialField field)
-{
-    fields.push_back(field);
-}
 
 
 
-std::string CredentialDecoder::decode(
-    std::vector<unsigned char>& dump,
+std::vector<uint8_t>
+CredentialDecoder::decode(
+    MifareClassic& card,
     CredentialField field
 )
 {
 
-    int blockOffset =
-        (field.sector * 4 + field.block) * 16;
+    std::vector<uint8_t> result;
 
 
-    int pos =
-        blockOffset + field.offset;
+    auto block =
+        card.getBlock(
+            field.block
+        );
 
 
-    unsigned int value = 0;
-
-
-    for(int i=0;i<field.size;i++)
+    if(block.empty())
     {
-        value |= 
-        dump[pos+i] << (8*i);
+        return result;
     }
 
 
-    std::stringstream ss;
+    int start =
+        field.offset;
 
-    ss << value;
+
+    int end =
+        start + field.size;
 
 
-    return ss.str();
+    if(end > block.size())
+    {
+        return result;
+    }
+
+
+    for(
+        int i = start;
+        i < end;
+        i++
+    )
+    {
+
+        result.push_back(
+            block[i]
+        );
+
+    }
+
+
+    return result;
+
 }
