@@ -59,25 +59,71 @@ void DumpViewer::showCredentials(
         profile.getFields();
 
 
-    for(int i = 0; i < fields.size(); i++)
+    CredentialDecoder decoder;
+
+
+    for(auto& field : fields)
     {
 
-        auto value =
-            profile.decodeField(
+        auto data =
+            decoder.decode(
                 card,
-                i
+                field
             );
 
 
         std::cout
-            << "Field "
-            << fields[i].name
+            << field.name
             << ": ";
 
 
-        printHex(value);
+        std::cout
+            << decoder.decodeValue(
+                data,
+                field.type
+            )
+            << std::endl;
 
     }
+
+}
+
+
+
+void DumpViewer::showCredit(
+    MifareClassic& card,
+    ProfileLoader& profile
+)
+{
+
+    auto fields =
+        profile.getFields();
+
+
+    if(fields.empty())
+        return;
+
+
+    CredentialDecoder decoder;
+
+
+    auto data =
+        decoder.decode(
+            card,
+            fields[0]
+        );
+
+
+    std::cout
+        << "Credit: ";
+
+
+    std::cout
+        << decoder.decodeValue(
+            data,
+            fields[0].type
+        )
+        << std::endl;
 
 }
 
