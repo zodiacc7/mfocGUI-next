@@ -1,9 +1,10 @@
-#ifndef CREDENTIALDECODER_H
-#define CREDENTIALDECODER_H
+#pragma once
 
 #include "CredentialField.h"
+#include "../Dump/MifareClassic.h"
+
 #include <vector>
-#include <string>
+#include <cstdint>
 
 
 class CredentialDecoder
@@ -11,19 +12,10 @@ class CredentialDecoder
 
 public:
 
-    void addField(CredentialField field);
-
-
-    std::string decode(
-        std::vector<unsigned char>& dump,
+    std::vector<uint8_t> decode(
+        MifareClassic& card,
         CredentialField field
     );
 
 
-private:
-
-    std::vector<CredentialField> fields;
-
 };
-
-#endif
