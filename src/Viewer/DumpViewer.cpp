@@ -4,6 +4,7 @@
 #include <iomanip>
 
 
+
 void DumpViewer::showCard(
     MifareClassic& card
 )
@@ -12,9 +13,25 @@ void DumpViewer::showCard(
     for(int block = 0; block < 64; block++)
     {
 
+        auto info =
+            card.getBlockInfo(block);
+
+
         std::cout
-            << "Block "
-            << block
+            << "Sector "
+            << info.sector
+            << " Block "
+            << info.block;
+
+
+        if(info.trailer)
+        {
+            std::cout
+                << " [SECTOR TRAILER]";
+        }
+
+
+        std::cout
             << ": ";
 
 
