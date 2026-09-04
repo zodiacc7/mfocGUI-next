@@ -2,13 +2,12 @@
 
 #include <vector>
 #include <string>
-
+#include "../Dump/DumpParser.h"
 
 class DumpViewer
 {
 public:
 
-    void showStructure(int sectors);
-
+    void showDump(DumpParser& dump);
 
 };
