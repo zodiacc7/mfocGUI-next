@@ -1,17 +1,35 @@
-#ifndef DUMPPARSER_H
-#define DUMPPARSER_H
+#pragma once
 
-#include <string>
 #include <vector>
+#include <string>
+#include <cstdint>
+
+
+struct DumpBlock
+{
+    int index;
+
+    std::vector<uint8_t> data;
+};
+
 
 class DumpParser
 {
+
+private:
+
+    std::vector<std::vector<DumpBlock>> sectors;
+
+
 public:
 
-    bool load(const std::string& filename);
+    bool load(std::string filename);
 
-    std::vector<unsigned char> data;
+
+    int getSectorCount();
+
+
+    std::vector<DumpBlock> getBlocks(int sector);
+
 
 };
-
-#endif
