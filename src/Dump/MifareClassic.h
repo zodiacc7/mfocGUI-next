@@ -40,8 +40,19 @@ public:
     );
 
 
+    bool saveDump(
+        std::string filename
+    );
+
+
     std::vector<uint8_t> getBlock(
         int block
+    );
+
+
+    bool writeBlock(
+        int block,
+        std::vector<uint8_t> data
     );
 
 
