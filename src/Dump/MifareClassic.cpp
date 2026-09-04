@@ -1,29 +1,74 @@
 #include "MifareClassic.h"
 
+#include <fstream>
 
-BlockInfo MifareClassic::getBlockInfo(int block)
+
+std::vector<uint8_t> blocks;
+
+
+
+bool MifareClassic::loadDump(std::string filename)
 {
-    BlockInfo info;
 
-    if(block < 128)
+    std::ifstream file(
+        filename,
+        std::ios::binary
+    );
+
+
+    if(!file)
+        return false;
+
+
+    blocks.clear();
+
+
+    for(int i = 0; i < 64; i++)
     {
-        info.sector = block / 4;
-        info.block = block % 4;
+
+        std::vector<uint8_t> block;
+
+        block.resize(
+            BLOCK_SIZE
+        );
+
+
+        file.read(
+            reinterpret_cast<char*>(
+                block.data()
+            ),
+            BLOCK_SIZE
+        );
+
+
+        if(!file)
+            return false;
+
+
+        blocks.push_back(block);
+
     }
-    else
+
+
+    return true;
+
+}
+
+
+
+std::vector<uint8_t>
+MifareClassic::getBlock(int block)
+{
+
+    if(
+        block < 0 ||
+        block >= blocks.size()
+    )
     {
-        info.sector = 32 + ((block - 128) / 16);
-        info.block = (block - 128) % 16;
+        return {};
     }
 
 
-    int blocksPerSector = 
-        (info.sector < 32) ? 4 : 16;
+    return blocks[block];
 
-
-    info.trailer =
-        (info.block == blocksPerSector - 1);
-
-
-    return info;
 }
