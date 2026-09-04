@@ -26,10 +26,8 @@ void DumpViewer::showCard(
 
         if(info.trailer)
         {
-
             std::cout
                 << " [SECTOR TRAILER]";
-
         }
 
 
@@ -37,48 +35,47 @@ void DumpViewer::showCard(
             << std::endl;
 
 
-        auto data =
-            card.getBlock(block);
-
-
-        printHex(data);
-
-
-        if(info.trailer)
-        {
-
-            auto trailer =
-                card.getSectorTrailer(block);
-
-
-            std::cout
-                << " Key A: ";
-
-            printHex(
-                trailer.keyA
-            );
-
-
-            std::cout
-                << " Access Bits: ";
-
-            printHex(
-                trailer.accessBits
-            );
-
-
-            std::cout
-                << " Key B: ";
-
-            printHex(
-                trailer.keyB
-            );
-
-        }
+        printHex(
+            card.getBlock(block)
+        );
 
 
         std::cout
             << std::endl;
+
+    }
+
+}
+
+
+
+void DumpViewer::showCredentials(
+    MifareClassic& card,
+    ProfileLoader& profile
+)
+{
+
+    auto fields =
+        profile.getFields();
+
+
+    for(int i = 0; i < fields.size(); i++)
+    {
+
+        auto value =
+            profile.decodeField(
+                card,
+                i
+            );
+
+
+        std::cout
+            << "Field "
+            << fields[i].name
+            << ": ";
+
+
+        printHex(value);
 
     }
 
