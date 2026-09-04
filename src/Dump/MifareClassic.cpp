@@ -25,9 +25,7 @@ bool MifareClassic::loadDump(
     for(int i = 0; i < 64; i++)
     {
 
-        std::vector<uint8_t> block;
-
-        block.resize(
+        std::vector<uint8_t> block(
             BLOCK_SIZE
         );
 
@@ -120,5 +118,49 @@ BlockInfo MifareClassic::getBlockInfo(
 
 
     return info;
+
+}
+
+
+
+SectorTrailer MifareClassic::getSectorTrailer(
+    int block
+)
+{
+
+    SectorTrailer trailer;
+
+
+    auto data =
+        getBlock(block);
+
+
+    if(
+        data.size() != 16
+    )
+    {
+        return trailer;
+    }
+
+
+    trailer.keyA.assign(
+        data.begin(),
+        data.begin() + 6
+    );
+
+
+    trailer.accessBits.assign(
+        data.begin() + 6,
+        data.begin() + 10
+    );
+
+
+    trailer.keyB.assign(
+        data.begin() + 10,
+        data.end()
+    );
+
+
+    return trailer;
 
 }
