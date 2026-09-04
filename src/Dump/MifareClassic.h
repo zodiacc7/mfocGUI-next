@@ -1,20 +1,25 @@
-#ifndef MIFARECLASSIC_H
-#define MIFARECLASSIC_H
+#pragma once
 
-struct BlockInfo
-{
-    int sector;
-    int block;
-    bool trailer;
-};
+#include <vector>
+#include <string>
+#include <cstdint>
 
 
 class MifareClassic
 {
+
 public:
 
-    static BlockInfo getBlockInfo(int block);
+    static constexpr int BLOCK_SIZE = 16;
+
+
+    bool loadDump(
+        std::string filename
+    );
+
+
+    std::vector<uint8_t> getBlock(
+        int block
+    );
 
 };
-
-#endif
