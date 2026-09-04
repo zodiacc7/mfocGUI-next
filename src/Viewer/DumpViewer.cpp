@@ -1,5 +1,7 @@
 #include "DumpViewer.h"
+
 #include <iostream>
+#include <iomanip>
 
 
 void DumpViewer::showDump(DumpParser& dump)
@@ -20,12 +22,43 @@ void DumpViewer::showDump(DumpParser& dump)
 
         for(auto& block : blocks)
         {
+
             std::cout
                 << " Block "
                 << block.index
-                << std::endl;
+                << ": ";
+
+
+            printHex(block.data);
+
         }
 
     }
+
+}
+
+
+
+void DumpViewer::printHex(
+    const std::vector<uint8_t>& data
+)
+{
+
+    for(auto byte : data)
+    {
+
+        std::cout
+            << std::hex
+            << std::setw(2)
+            << std::setfill('0')
+            << (int)byte
+            << " ";
+
+    }
+
+
+    std::cout
+        << std::dec
+        << std::endl;
 
 }
