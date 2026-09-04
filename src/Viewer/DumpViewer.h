@@ -2,11 +2,9 @@
 
 #include "../Dump/MifareClassic.h"
 #include "../Credential/ProfileLoader.h"
-#include "../Credential/CredentialDecoder.h"
 
 #include <vector>
 #include <cstdint>
-
 
 
 class DumpViewer
@@ -25,9 +23,10 @@ public:
     );
 
 
-    void showCredit(
+    void editCredit(
         MifareClassic& card,
-        ProfileLoader& profile
+        ProfileLoader& profile,
+        std::string value
     );
 
 
