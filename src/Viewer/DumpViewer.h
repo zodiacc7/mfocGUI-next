@@ -2,6 +2,9 @@
 
 #include "../Dump/MifareClassic.h"
 
+#include <vector>
+#include <cstdint>
+
 
 class DumpViewer
 {
