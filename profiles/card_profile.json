@@ -1,0 +1,23 @@
+{
+    "name": "Mifare Classic Card",
+
+    "fields": [
+        {
+            "name": "Credential Value",
+            "sector": 9,
+            "block": 1,
+            "offset": 0,
+            "size": 4,
+            "type": "uint32"
+        },
+
+        {
+            "name": "Credential Backup",
+            "sector": 9,
+            "block": 1,
+            "offset": 4,
+            "size": 4,
+            "type": "inverse"
+        }
+    ]
+}
