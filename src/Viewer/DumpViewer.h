@@ -1,13 +1,17 @@
 #pragma once
 
-#include "../Dump/DumpParser.h"
+#include "../Dump/MifareClassic.h"
 
 
 class DumpViewer
 {
+
 public:
 
-    void showDump(DumpParser& dump);
+    void showCard(
+        MifareClassic& card
+    );
+
 
 private:
 
