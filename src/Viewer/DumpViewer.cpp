@@ -39,10 +39,6 @@ void DumpViewer::showCard(
             card.getBlock(block)
         );
 
-
-        std::cout
-            << std::endl;
-
     }
 
 }
@@ -62,25 +58,22 @@ void DumpViewer::showCredentials(
     CredentialDecoder decoder;
 
 
-    for(auto& field : fields)
+    for(int i = 0; i < fields.size(); i++)
     {
 
         auto data =
             decoder.decode(
                 card,
-                field
+                fields[i]
             );
 
 
         std::cout
-            << field.name
-            << ": ";
-
-
-        std::cout
+            << fields[i].name
+            << ": "
             << decoder.decodeValue(
                 data,
-                field.type
+                fields[i].type
             )
             << std::endl;
 
@@ -90,39 +83,25 @@ void DumpViewer::showCredentials(
 
 
 
-void DumpViewer::showCredit(
+void DumpViewer::editCredit(
     MifareClassic& card,
-    ProfileLoader& profile
+    ProfileLoader& profile,
+    std::string value
 )
 {
 
-    auto fields =
-        profile.getFields();
+    // اولین Field در Profile فعلاً Credit است
 
-
-    if(fields.empty())
-        return;
-
-
-    CredentialDecoder decoder;
-
-
-    auto data =
-        decoder.decode(
-            card,
-            fields[0]
-        );
+    profile.updateField(
+        card,
+        0,
+        value
+    );
 
 
     std::cout
-        << "Credit: ";
-
-
-    std::cout
-        << decoder.decodeValue(
-            data,
-            fields[0].type
-        )
+        << "Credit updated: "
+        << value
         << std::endl;
 
 }
