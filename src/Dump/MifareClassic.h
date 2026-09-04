@@ -13,6 +13,15 @@ struct BlockInfo
 };
 
 
+struct SectorTrailer
+{
+    std::vector<uint8_t> keyA;
+    std::vector<uint8_t> accessBits;
+    std::vector<uint8_t> keyB;
+};
+
+
+
 class MifareClassic
 {
 
@@ -37,6 +46,11 @@ public:
 
 
     BlockInfo getBlockInfo(
+        int block
+    );
+
+
+    SectorTrailer getSectorTrailer(
         int block
     );
 
