@@ -7,13 +7,17 @@
 using json = nlohmann::json;
 
 
+
 std::vector<CredentialField>
 JsonParser::loadFields(std::string filename)
 {
+
     std::vector<CredentialField> fields;
 
 
-    std::ifstream file(filename);
+    std::ifstream file(
+        filename
+    );
 
 
     if(!file)
@@ -25,8 +29,10 @@ JsonParser::loadFields(std::string filename)
     file >> j;
 
 
+
     for(auto& item : j["fields"])
     {
+
         CredentialField field;
 
 
@@ -50,13 +56,37 @@ JsonParser::loadFields(std::string filename)
             item["size"];
 
 
-        field.type =
+
+        std::string type =
             item["type"];
 
 
-        fields.push_back(field);
+
+        if(type == "uint32")
+        {
+            field.type =
+                CredentialType::Integer;
+        }
+        else if(type == "inverse")
+        {
+            field.type =
+                CredentialType::Hex;
+        }
+        else
+        {
+            field.type =
+                CredentialType::Hex;
+        }
+
+
+
+        fields.push_back(
+            field
+        );
+
     }
 
 
     return fields;
+
 }
