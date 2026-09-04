@@ -4,34 +4,25 @@
 #include <iomanip>
 
 
-void DumpViewer::showDump(DumpParser& dump)
+void DumpViewer::showCard(
+    MifareClassic& card
+)
 {
 
-    for(int s = 0; s < dump.getSectorCount(); s++)
+    for(int block = 0; block < 64; block++)
     {
 
         std::cout
-            << "Sector "
-            << s
-            << std::endl;
+            << "Block "
+            << block
+            << ": ";
 
 
-        auto blocks =
-            dump.getBlocks(s);
+        auto data =
+            card.getBlock(block);
 
 
-        for(auto& block : blocks)
-        {
-
-            std::cout
-                << " Block "
-                << block.index
-                << ": ";
-
-
-            printHex(block.data);
-
-        }
+        printHex(data);
 
     }
 
@@ -44,14 +35,14 @@ void DumpViewer::printHex(
 )
 {
 
-    for(auto byte : data)
+    for(auto b : data)
     {
 
         std::cout
             << std::hex
             << std::setw(2)
             << std::setfill('0')
-            << (int)byte
+            << (int)b
             << " ";
 
     }
