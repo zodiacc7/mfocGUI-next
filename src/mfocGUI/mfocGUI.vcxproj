@@ -91,6 +91,14 @@
     <ClInclude Include="OVData.h" />
     <ClInclude Include="OVStations.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="..\Credential\CredentialField.h" />
+    <ClInclude Include="..\Credential\CredentialDecoder.h" />
+    <ClInclude Include="..\Credential\JsonParser.h" />
+    <ClInclude Include="..\Credential\ProfileLoader.h" />
+    <ClInclude Include="..\Dump\DumpParser.h" />
+    <ClInclude Include="..\Dump\MifareClassic.h" />
+    <ClInclude Include="..\Viewer\DumpViewer.h" />
+    <ClInclude Include="..\Viewer\HexViewer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="crapto1.cpp" />
@@ -101,6 +109,13 @@
     <ClCompile Include="nfc-utils.cpp" />
     <ClCompile Include="OVData.cpp" />
     <ClCompile Include="OVStations.cpp" />
+    <ClCompile Include="..\Credential\CredentialDecoder.cpp" />
+    <ClCompile Include="..\Credential\JsonParser.cpp" />
+    <ClCompile Include="..\Credential\ProfileLoader.cpp" />
+    <ClCompile Include="..\Dump\DumpParser.cpp" />
+    <ClCompile Include="..\Dump\MifareClassic.cpp" />
+    <ClCompile Include="..\Viewer\DumpViewer.cpp" />
+    <ClCompile Include="..\Viewer\HexViewer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="mfocGUI.rc" />
