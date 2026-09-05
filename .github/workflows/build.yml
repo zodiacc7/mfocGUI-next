@@ -5,25 +5,107 @@ on:
     branches:
       - master
       - develop
+
   pull_request:
     branches:
       - master
       - develop
+
   workflow_dispatch:
+
 
 permissions:
   contents: read
 
+
 jobs:
   build:
+
     runs-on: windows-latest
 
     steps:
-      - name: Checkout
+
+      - name: Checkout repository
         uses: actions/checkout@v4
+
 
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
 
+
+      - name: Inspect repository
+        shell: pwsh
+        run: |
+          Write-Host "=============================="
+          Write-Host "Current directory"
+          Write-Host "=============================="
+          Get-Location
+
+          Write-Host ""
+          Write-Host "=============================="
+          Write-Host "Solution files"
+          Write-Host "=============================="
+
+          Get-ChildItem -Path . -Recurse -Filter *.sln |
+          ForEach-Object {
+              Write-Host $_.FullName
+          }
+
+
+          Write-Host ""
+          Write-Host "=============================="
+          Write-Host "Visual Studio project files"
+          Write-Host "=============================="
+
+          Get-ChildItem -Path . -Recurse -Filter *.vcxproj |
+          ForEach-Object {
+              Write-Host $_.FullName
+          }
+
+
       - name: Build solution
-        run: msbuild src/mfocGUI/mfocGUI.sln /p:Configuration=Debug /p:Platform=Win32
+        shell: pwsh
+        run: |
+
+          Write-Host "Searching solution..."
+
+          $sln = Get-ChildItem -Path . -Recurse -Filter *.sln |
+                 Select-Object -First 1
+
+
+          if ($null -eq $sln)
+          {
+              Write-Host "No .sln found"
+
+              Write-Host "Searching vcxproj..."
+
+              $proj = Get-ChildItem -Path . -Recurse -Filter *.vcxproj |
+                      Select-Object -First 1
+
+
+              if ($null -eq $proj)
+              {
+                  throw "No Visual Studio project found"
+              }
+
+
+              Write-Host "Building project:"
+              Write-Host $proj.FullName
+
+
+              msbuild $proj.FullName `
+                /p:Configuration=Debug `
+                /p:Platform=Win32
+
+          }
+          else
+          {
+
+              Write-Host "Building solution:"
+              Write-Host $sln.FullName
+
+
+              msbuild $sln.FullName `
+                /p:Configuration=Debug `
+                /p:Platform=Win32
+          }
