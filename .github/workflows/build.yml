@@ -67,7 +67,7 @@ jobs:
 
 
 
-      - name="Retarget Visual Studio Toolset and Windows SDK"
+      - name: Retarget Visual Studio Toolset and Windows SDK
         shell: pwsh
         run: |
 
