@@ -36,8 +36,9 @@ jobs:
       - name: Inspect repository
         shell: pwsh
         run: |
+
           Write-Host "=============================="
-          Write-Host "Repository location"
+          Write-Host "Repository"
           Write-Host "=============================="
 
           Get-Location
@@ -45,7 +46,7 @@ jobs:
 
           Write-Host ""
           Write-Host "=============================="
-          Write-Host "Solution files"
+          Write-Host "Solutions"
           Write-Host "=============================="
 
           Get-ChildItem -Path . -Recurse -Filter *.sln |
@@ -56,7 +57,7 @@ jobs:
 
           Write-Host ""
           Write-Host "=============================="
-          Write-Host "Visual Studio project files"
+          Write-Host "Projects"
           Write-Host "=============================="
 
           Get-ChildItem -Path . -Recurse -Filter *.vcxproj |
@@ -65,11 +66,13 @@ jobs:
           }
 
 
-      - name: Retarget Windows SDK
+
+      - name="Retarget Visual Studio Toolset and Windows SDK"
         shell: pwsh
         run: |
 
-          Write-Host "Updating Windows SDK version..."
+          Write-Host "Updating project files..."
+
 
           Get-ChildItem -Path . -Recurse -Filter *.vcxproj |
           ForEach-Object {
@@ -81,8 +84,15 @@ jobs:
               $content = Get-Content $_.FullName -Raw
 
 
+              # Visual Studio 2015 -> Visual Studio 2022
               $content = $content -replace `
-              '<WindowsTargetPlatformVersion>8\.1</WindowsTargetPlatformVersion>', `
+              '<PlatformToolset>v140</PlatformToolset>',
+              '<PlatformToolset>v143</PlatformToolset>'
+
+
+              # Windows SDK 8.1 -> Windows 10 SDK
+              $content = $content -replace `
+              '<WindowsTargetPlatformVersion>8\.1</WindowsTargetPlatformVersion>',
               '<WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>'
 
 
@@ -90,11 +100,14 @@ jobs:
           }
 
 
+
       - name: Build solution
         shell: pwsh
         run: |
 
+
           Write-Host "Searching solution..."
+
 
           $sln = Get-ChildItem -Path . -Recurse -Filter *.sln |
                  Select-Object -First 1
@@ -117,7 +130,6 @@ jobs:
 
               Write-Host "No solution found."
 
-              Write-Host "Searching project..."
 
               $proj = Get-ChildItem -Path . -Recurse -Filter *.vcxproj |
                       Select-Object -First 1
@@ -125,7 +137,7 @@ jobs:
 
               if ($null -eq $proj)
               {
-                  throw "No Visual Studio solution or project found"
+                  throw "No Visual Studio project found"
               }
 
 
