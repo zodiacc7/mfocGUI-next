@@ -1,194 +1,50 @@
-name: Windows Build
+name: Build mfocGUI
 
 on:
   push:
     branches:
       - master
-      - develop
-
+      - main
   pull_request:
-    branches:
-      - master
-      - develop
-
-  workflow_dispatch:
-
-
-permissions:
-  contents: read
-
 
 jobs:
 
-  build:
+  build-windows:
 
     runs-on: windows-latest
 
-
     steps:
 
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-
-
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v2
-
-
-
-      - name: Inspect repository
-        shell: pwsh
-        run: |
-
-          Write-Host "Repository:"
-          Get-Location
-
-          Write-Host ""
-          Write-Host "Solutions:"
-
-          Get-ChildItem -Path . -Recurse -Filter *.sln |
-          ForEach-Object {
-              Write-Host $_.FullName
-          }
-
-
-          Write-Host ""
-          Write-Host "Projects:"
-
-          Get-ChildItem -Path . -Recurse -Filter *.vcxproj |
-          ForEach-Object {
-              Write-Host $_.FullName
-          }
-
-
-
-      - name: Retarget Visual Studio Toolset and SDK
-        shell: pwsh
-        run: |
-
-          Write-Host "Updating Visual Studio settings..."
-
-
-          Get-ChildItem -Path . -Recurse -Filter *.vcxproj |
-          ForEach-Object {
-
-              Write-Host "Processing:"
-              Write-Host $_.FullName
-
-
-              $content = Get-Content $_.FullName -Raw
-
-
-              # VS2015 -> VS2022
-              $content = $content -replace `
-              '<PlatformToolset>v140</PlatformToolset>',
-              '<PlatformToolset>v143</PlatformToolset>'
-
-
-              # Windows 8.1 SDK -> Windows 10 SDK
-              $content = $content -replace `
-              '<WindowsTargetPlatformVersion>8\.1</WindowsTargetPlatformVersion>',
-              '<WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>'
-
-
-              Set-Content $_.FullName $content
-          }
-
-
-
-      - name: Add legacy C++ compatibility defines
-        shell: pwsh
-        run: |
-
-          Write-Host "Adding compatibility defines..."
-
-
-          Get-ChildItem -Path . -Recurse -Filter *.vcxproj |
-          ForEach-Object {
-
-              Write-Host "Patching:"
-              Write-Host $_.FullName
-
-
-              $content = Get-Content $_.FullName -Raw
-
-
-              $content = $content -replace `
-              '<PreprocessorDefinitions>',
-              '<PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;'
-
-
-              Set-Content $_.FullName $content
-          }
-
-
-
-      - name: Check missing source files
-        shell: pwsh
-        run: |
-
-          Write-Host "Searching HexViewer files..."
-
-          Get-ChildItem -Path . -Recurse |
-          Where-Object {
-              $_.Name -like "*HexViewer*"
-          } |
-          ForEach-Object {
-              Write-Host $_.FullName
-          }
-
-
-
-      - name: Build solution
-        shell: pwsh
-        run: |
-
-
-          Write-Host "Searching solution..."
-
-
-          $sln = Get-ChildItem -Path . -Recurse -Filter *.sln |
-                 Select-Object -First 1
-
-
-
-          if ($null -eq $sln)
-          {
-
-              Write-Host "No solution found."
-
-
-              $proj = Get-ChildItem -Path . -Recurse -Filter *.vcxproj |
-                      Select-Object -First 1
-
-
-              if ($null -eq $proj)
-              {
-                  throw "No Visual Studio project found"
-              }
-
-
-              Write-Host "Building project:"
-              Write-Host $proj.FullName
-
-
-              msbuild $proj.FullName `
-                /p:Configuration=Debug `
-                /p:Platform=Win32
-
-          }
-
-          else
-
-          {
-
-              Write-Host "Building solution:"
-              Write-Host $sln.FullName
-
-
-              msbuild $sln.FullName `
-                /p:Configuration=Debug `
-                /p:Platform=Win32
-
-          }
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Install dependencies
+      shell: cmd
+      run: |
+        echo Preparing build environment
+
+    - name: Fix compiler compatibility
+      shell: powershell
+      run: |
+        echo #define PTRDIFF_MAX 9223372036854775807 > compat.h
+
+    - name: Build
+      shell: cmd
+      run: |
+
+        msbuild src\mfocGUI.sln ^
+        /p:Configuration=Release ^
+        /p:Platform=x64 ^
+        /p:AdditionalOptions="/D PTRDIFF_MAX=9223372036854775807" ^
+        /m
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: mfocGUI-release
+        path: |
+          src/**/Release/**/*.exe
+          src/**/Release/**/*.dll
