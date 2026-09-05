@@ -37,9 +37,11 @@ jobs:
         shell: pwsh
         run: |
           Write-Host "=============================="
-          Write-Host "Current directory"
+          Write-Host "Repository location"
           Write-Host "=============================="
+
           Get-Location
+
 
           Write-Host ""
           Write-Host "=============================="
@@ -63,6 +65,31 @@ jobs:
           }
 
 
+      - name: Retarget Windows SDK
+        shell: pwsh
+        run: |
+
+          Write-Host "Updating Windows SDK version..."
+
+          Get-ChildItem -Path . -Recurse -Filter *.vcxproj |
+          ForEach-Object {
+
+              Write-Host "Processing:"
+              Write-Host $_.FullName
+
+
+              $content = Get-Content $_.FullName -Raw
+
+
+              $content = $content -replace `
+              '<WindowsTargetPlatformVersion>8\.1</WindowsTargetPlatformVersion>', `
+              '<WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>'
+
+
+              Set-Content $_.FullName $content
+          }
+
+
       - name: Build solution
         shell: pwsh
         run: |
@@ -73,11 +100,24 @@ jobs:
                  Select-Object -First 1
 
 
-          if ($null -eq $sln)
+          if ($null -ne $sln)
           {
-              Write-Host "No .sln found"
 
-              Write-Host "Searching vcxproj..."
+              Write-Host "Building solution:"
+              Write-Host $sln.FullName
+
+
+              msbuild $sln.FullName `
+                /p:Configuration=Debug `
+                /p:Platform=Win32
+
+          }
+          else
+          {
+
+              Write-Host "No solution found."
+
+              Write-Host "Searching project..."
 
               $proj = Get-ChildItem -Path . -Recurse -Filter *.vcxproj |
                       Select-Object -First 1
@@ -85,7 +125,7 @@ jobs:
 
               if ($null -eq $proj)
               {
-                  throw "No Visual Studio project found"
+                  throw "No Visual Studio solution or project found"
               }
 
 
@@ -94,18 +134,6 @@ jobs:
 
 
               msbuild $proj.FullName `
-                /p:Configuration=Debug `
-                /p:Platform=Win32
-
-          }
-          else
-          {
-
-              Write-Host "Building solution:"
-              Write-Host $sln.FullName
-
-
-              msbuild $sln.FullName `
                 /p:Configuration=Debug `
                 /p:Platform=Win32
           }
