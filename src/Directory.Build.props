@@ -2,7 +2,7 @@
 <Project>
   <ItemDefinitionGroup>
     <ClCompile>
-      <ForcedIncludeFiles>cstddef;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles>cstdint;stdint.h;cstddef;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
   </ItemDefinitionGroup>
 </Project>
