@@ -6,6 +6,10 @@
 #include <cstddef>
 #include <cstdint>
 
+#ifndef PTRDIFF_MAX
+#define PTRDIFF_MAX INTPTR_MAX
+#endif
+
 #include <nfc/nfc.h>
 
 #include <list>
@@ -15,7 +19,6 @@
 #define MEM_CHUNK               10000
 #define TRY_KEYS                150
 
-// Number of trailers == number of sectors
 #define NR_TRAILERS_1k  (16)
 #define NR_TRAILERS_4k  (40)
 
@@ -35,7 +38,8 @@ typedef struct { uint64_t *brokenKeys; uint32_t size; } bKeys;
 typedef struct { nfc_device_t *pdi; } mfreader;
 typedef struct { uint64_t key; int count; } countKeys;
 typedef struct { uint8_t sector; byte_t KeyA[6]; byte_t KeyB[6]; byte_t Data[16][16]; } mifare_sector;
-typedef struct { char keyType; int sector; int probe; int set; unsigned __int64 duration; } performance;
+typedef struct { char keyType; int sector; int probe; int set; unsigned __int64 duration; } performance;
+
 extern bool stopreadingcard;
 
 int ReadCard(nfc_device_desc_t *device, std::list<performance> *performanceData, int sets, char *keyDir, unsigned char *buffer, int buffersize, int skipToSector, bool keyA, bool keyB, void (*UpdateSectorStatus)(char, int, byte_t), void (*UpdateStatusMessage)(char *status), void (*SetCardInfo)(char *status));
