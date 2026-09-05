@@ -15,7 +15,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration"><ConfigurationType>Application</ConfigurationType><UseDebugLibraries>false</UseDebugLibraries><PlatformToolset>v143</PlatformToolset></PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <PropertyGroup><IncludePath>$(ProjectDir)..\LibNFC\include;$(ProjectDir)..\sqlite;$(ProjectDir)..;$(IncludePath)</IncludePath><LibraryPath>$(ProjectDir)..\LibNFC\lib;$(ProjectDir)..\sqlite;$(LibraryPath)</LibraryPath></PropertyGroup>
-  <ItemDefinitionGroup><ClCompile><WarningLevel>Level3</WarningLevel><PreprocessorDefinitions>WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions><LanguageStandard>stdcpp17</LanguageStandard><AdditionalOptions>/Zc:__cplusplus /FIcstddef /FIcstdint %(AdditionalOptions)</AdditionalOptions></ClCompile></ItemDefinitionGroup>
+  <ItemDefinitionGroup><ClCompile><WarningLevel>Level3</WarningLevel><PreprocessorDefinitions>WIN32;_WINDOWS;PTRDIFF_MAX=2147483647;%(PreprocessorDefinitions)</PreprocessorDefinitions><LanguageStandard>stdcpp17</LanguageStandard><AdditionalOptions>/Zc:__cplusplus /FIcstddef /FIcstdint %(AdditionalOptions)</AdditionalOptions></ClCompile></ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="crapto1.h" /><ClInclude Include="mfoc.h" /><ClInclude Include="mfocMainWindow.h" /><ClInclude Include="mifare.h" /><ClInclude Include="nfc-utils.h" /><ClInclude Include="OVData.h" /><ClInclude Include="OVStations.h" /><ClInclude Include="resource.h" />
     <ClInclude Include="..\Viewer\HexViewer.h" />
