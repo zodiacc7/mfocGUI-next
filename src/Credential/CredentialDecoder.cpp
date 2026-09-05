@@ -1,5 +1,7 @@
 #include "CredentialDecoder.h"
 
+#include <cstddef>
+#include <cstdint>
 #include <sstream>
 #include <iomanip>
 
